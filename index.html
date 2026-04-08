@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Le Québec Tribune — Montreal confirmed 2 years ahead of world</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --red:#c8102e; --dark:#111827; --text:#1a1a1a; --muted:#6b7280; --light:#f7f5f0; --border:#ddd8ce; --bg:#faf8f4; --white:#fff; }
+    html { scroll-behavior: smooth; }
+    body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',serif; font-size:16px; line-height:1.75; }
+    a { text-decoration:none; color:inherit; cursor:pointer; }
+
+    /* MODAL */
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:999; align-items:center; justify-content:center; padding:20px; }
+    .modal.active { display:flex; }
+    .modal-box { background:white; max-width:700px; width:100%; max-height:90vh; overflow-y:auto; padding:40px 44px; position:relative; border-top:4px solid var(--red); }
+    .modal-close { position:absolute; top:16px; right:20px; font-size:22px; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; line-height:1; }
+    .modal-close:hover { color:var(--text); }
+    .modal-section { font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:10px; }
+    .modal-headline { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; line-height:1.2; margin-bottom:12px; }
+    .modal-byline { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--muted); margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+    .modal-body p { font-size:15px; line-height:1.85; margin-bottom:14px; }
+    .modal-body p strong { font-weight:600; }
+    .modal-pull { border-left:3px solid var(--red); padding:10px 18px; margin:18px 0; background:var(--light); }
+    .modal-pull p { font-family:'Playfair Display',serif; font-style:italic; font-size:17px; margin:0 0 6px !important; line-height:1.4; }
+    .modal-pull cite { font-family:'DM Sans',sans-serif; font-size:11px; color:var(--muted); font-style:normal; }
+
+    /* TOP BAR */
+    .topbar { background:var(--dark); color:#9ca3af; font-family:'DM Sans',sans-serif; font-size:11px; padding:7px 40px; display:flex; justify-content:space-between; align-items:center; }
+    .topbar a { color:#9ca3af; margin-right:16px; }
+    .topbar a:hover { color:white; }
+
+    /* MASTHEAD */
+    .masthead { padding:20px 40px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .logo { font-family:'Playfair Display',serif; font-size:50px; font-weight:700; letter-spacing:-2px; line-height:1; }
+    .logo span { color:var(--red); }
+    .masthead-center { text-align:center; border-left:1px solid var(--border); border-right:1px solid var(--border); padding:0 24px; }
+    .masthead-center .edition { font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+    .masthead-center .dateline { font-family:'Source Serif 4',serif; font-size:13px; font-style:italic; }
+    .masthead-right { text-align:right; font-family:'DM Sans',sans-serif; font-size:11px; color:var(--muted); line-height:1.8; }
+
+    /* TICKER */
+    .ticker { background:var(--red); color:white; font-family:'DM Sans',sans-serif; font-size:12px; padding:6px 0; overflow:hidden; white-space:nowrap; }
+    .ticker-inner { display:inline-block; animation:tick 50s linear infinite; }
+    .ticker-inner span { margin-right:60px; }
+    .ticker-inner span::before { content:"▶  "; font-size:8px; }
+    @keyframes tick { from{transform:translateX(100vw)} to{transform:translateX(-100%)} }
+
+    /* NAV */
+    .nav { border-bottom:3px solid var(--red); background:white; padding:0 40px; display:flex; align-items:center; position:sticky; top:0; z-index:100; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+    .nav a { color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; padding:12px 14px; display:inline-block; border-bottom:3px solid transparent; margin-bottom:-3px; transition:color .15s; }
+    .nav a:hover { border-bottom-color:var(--red); color:var(--red); }
+    .nav-right { margin-left:auto; }
+    .btn-login { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; padding:6px 16px; border:1px solid var(--border); cursor:pointer; }
+    .btn-login:hover { background:var(--light); }
+
+    /* BREAKING */
+    .breaking { background:#fffbea; border-left:5px solid #d4a017; padding:10px 24px; margin:18px 40px; display:flex; align-items:center; gap:14px; }
+    .breaking-badge { background:var(--red); color:white; font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:4px 10px; white-space:nowrap; }
+    .breaking-text { font-family:'DM Sans',sans-serif; font-size:13px; color:#7a5c00; }
+    .breaking-text a { color:#7a5c00; font-weight:600; text-decoration:underline; cursor:pointer; }
+
+    /* CONTAINER */
+    .container { max-width:1160px; margin:0 auto; padding:0 40px 60px; }
+
+    /* STOCKS */
+    .stocks { background:white; border:1px solid var(--border); padding:12px 20px; display:flex; gap:28px; flex-wrap:wrap; margin-bottom:28px; align-items:center; }
+    .stock-label { font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+    .stock-item { font-family:'DM Sans',sans-serif; font-size:12px; display:flex; align-items:center; gap:6px; }
+    .stock-name { font-weight:500; }
+    .up { color:#15803d; font-size:11px; }
+    .dn { color:var(--red); font-size:11px; }
+
+    /* TOP STORY */
+    .top-story { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--border); margin-bottom:32px; background:white; }
+    .top-story-img { height:360px; background:linear-gradient(135deg,#0d0d1a 0%,#1a1a3e 50%,#0f2060 100%); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+    .ring { position:absolute; border-radius:50%; border:1.5px solid rgba(200,16,46,.35); }
+    .r1{width:220px;height:220px} .r2{width:150px;height:150px;border-color:rgba(200,16,46,.2)} .r3{width:320px;height:320px;border-color:rgba(200,16,46,.12)} .r4{width:80px;height:80px;border-color:rgba(200,16,46,.45)}
+    .hero-content { z-index:2; text-align:center; }
+    .hero-icon { font-size:64px; display:block; margin-bottom:10px; }
+    .hero-label { color:white; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:500; }
+    .hero-sub { color:rgba(255,255,255,.5); font-family:'DM Sans',sans-serif; font-size:12px; margin-top:4px; }
+    .top-story-text { padding:36px 32px; display:flex; flex-direction:column; justify-content:center; border-left:1px solid var(--border); }
+    .section-label { font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:10px; }
+    .headline-xl { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; line-height:1.18; margin-bottom:14px; cursor:pointer; transition:color .15s; }
+    .headline-xl:hover { color:var(--red); }
+    .deck { font-size:15px; font-weight:300; color:#3a3a3a; line-height:1.65; margin-bottom:14px; }
+    .byline { font-family:'DM Sans',sans-serif; font-size:11.5px; color:var(--muted); }
+    .byline strong { color:var(--text); font-weight:500; }
+    .read-more { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:var(--red); letter-spacing:.5px; margin-top:18px; cursor:pointer; display:inline-block; }
+    .read-more:hover { text-decoration:underline; }
+
+    /* LAYOUT */
+    .layout { display:grid; grid-template-columns:1fr 320px; gap:40px; }
+
+    /* CARD GRID */
+    .article-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:32px; }
+    .article-card { border-top:3px solid var(--border); padding-top:14px; cursor:pointer; }
+    .article-card:hover .card-headline { color:var(--red); }
+    .card-section { font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:6px; }
+    .card-headline { font-family:'Playfair Display',serif; font-size:18px; font-weight:600; line-height:1.25; margin-bottom:8px; transition:color .15s; }
+    .card-deck { font-size:13.5px; color:#4a4a4a; line-height:1.6; margin-bottom:8px; font-weight:300; }
+    .card-byline { font-family:'DM Sans',sans-serif; font-size:11px; color:var(--muted); }
+
+    /* DIVIDER */
+    .divider { display:flex; align-items:center; gap:14px; margin:28px 0 20px; }
+    .divider span { font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; white-space:nowrap; }
+    .divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* LIST ARTICLES */
+    .list-article { border-bottom:1px solid var(--border); padding:16px 0; cursor:pointer; display:grid; grid-template-columns:1fr 80px; gap:14px; align-items:start; }
+    .list-article:first-child { border-top:1px solid var(--border); }
+    .list-article:hover .list-headline { color:var(--red); }
+    .list-headline { font-family:'Playfair Display',serif; font-size:16px; font-weight:600; line-height:1.3; margin-bottom:4px; transition:color .15s; }
+    .list-deck { font-size:13px; color:var(--muted); line-height:1.5; font-weight:300; }
+    .list-thumb { width:80px; height:60px; background:var(--light); display:flex; align-items:center; justify-content:center; font-size:26px; border:1px solid var(--border); }
+
+    /* SIDEBAR */
+    .sidebar { display:flex; flex-direction:column; gap:24px; }
+    .scard { border:1px solid var(--border); background:white; padding:18px; }
+    .scard-title { font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+    .time-big { font-family:'Playfair Display',serif; font-size:48px; color:var(--red); text-align:center; letter-spacing:-2px; line-height:1; }
+    .time-year { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--red); text-align:center; margin-top:4px; letter-spacing:1px; }
+    .time-note { font-family:'DM Sans',sans-serif; font-size:11px; color:var(--muted); text-align:center; margin-top:4px; }
+    .time-sep { margin:10px 0; border:none; border-top:1px solid var(--border); }
+    .time-world { font-family:'DM Sans',sans-serif; font-size:11px; color:var(--muted); text-align:center; }
+    .time-world strong { color:var(--text); }
+    .fact { font-family:'DM Sans',sans-serif; font-size:12.5px; color:#444; line-height:1.6; margin-bottom:12px; padding:0 0 12px 12px; border-left:2px solid var(--border); border-bottom:1px dotted var(--border); }
+    .fact:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+    .s-item { padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer; }
+    .s-item:last-child { border-bottom:none; }
+    .s-item:hover .s-head { color:var(--red); }
+    .s-head { font-family:'Playfair Display',serif; font-size:14px; font-weight:600; line-height:1.3; margin-bottom:3px; transition:color .15s; }
+    .s-sub { font-family:'DM Sans',sans-serif; font-size:11px; color:var(--muted); }
+    .op-card { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer; }
+    .op-card:last-child { border-bottom:none; }
+    .op-avatar { width:44px; height:44px; border-radius:50%; background:var(--light); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .op-head { font-family:'Playfair Display',serif; font-size:13.5px; font-weight:600; font-style:italic; line-height:1.3; margin-bottom:3px; }
+    .op-author { font-family:'DM Sans',sans-serif; font-size:11px; color:var(--muted); }
+
+    /* FOOTER */
+    .footer { background:var(--dark); color:#9ca3af; font-family:'DM Sans',sans-serif; font-size:12px; padding:40px; margin-top:40px; }
+    .footer-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; margin-bottom:30px; }
+    .footer-col-title { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#e5e7eb; margin-bottom:14px; }
+    .footer-col a { display:block; color:#9ca3af; margin-bottom:8px; }
+    .footer-col a:hover { color:white; }
+    .footer-bottom { border-top:1px solid #374151; padding-top:20px; display:flex; justify-content:space-between; align-items:center; font-size:11px; }
+    .footer-logo { font-family:'Playfair Display',serif; font-size:22px; color:white; margin-bottom:6px; }
+    .footer-logo span { color:var(--red); }
+
+    @media(max-width:800px){
+      .layout,.top-story,.article-grid,.footer-grid{grid-template-columns:1fr}
+      .masthead{flex-direction:column;align-items:flex-start;gap:10px}
+      .masthead-center{border:none;padding:0}
+      .container,.breaking{padding-left:20px;padding-right:20px}
+      .nav{padding:0 16px;overflow-x:auto}
+      .topbar{display:none}
+      .logo{font-size:36px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-close" onclick="closeModal()">✕</div>
+    <div class="modal-section" id="ms"></div>
+    <div class="modal-headline" id="mh"></div>
+    <div class="modal-byline" id="mb"></div>
+    <div class="modal-body" id="md"></div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div>
+    <a onclick="show('world')">World</a>
+    <a onclick="show('canada')">Canada</a>
+    <a onclick="show('science')">Science</a>
+    <a onclick="show('politics')">Politics</a>
+    <a onclick="show('obits')">Obituaries</a>
+    <a onclick="show('corrections')">Corrections</a>
+    <a onclick="show('classifieds')">Classifieds</a>
+  </div>
+  <div>⛅ Montreal (2028): 14°C &nbsp;·&nbsp; Rest of world (2026): 14°C — identical, scientists disturbed</div>
+</div>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="logo">Le <span>Québec</span> Tribune</div>
+  <div class="masthead-center">
+    <div class="edition">Temporally Displaced Edition</div>
+    <div class="dateline">Wednesday, April 8, 2028 · Local &nbsp;|&nbsp; Wednesday, April 8, 2026 · Global</div>
+  </div>
+  <div class="masthead-right">Established 1842<br>Montreal, Québec, Canada<br><em>Truth, Accuracy, Temporal Integrity</em></div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-inner">
+  <span>BREAKING: Federal government confirms UTC−5/+2Y designation for Montreal, effective immediately</span>
+  <span>Markets react — TSX futures for 2026 now trading at 2028 prices with no clear legal basis</span>
+  <span>Brossard files formal petition to remain in 2026, cites "preference for experiencing time normally"</span>
+  <span>CRA places 847,000 Montreal returns in new "Premature Filing" category, requests two-year extension</span>
+  <span>Quebec City confirmed to be 45 minutes behind Montreal for entirely unrelated reasons</span>
+  <span>Laval found to be in 2025 — mayor insists city is "ahead of its time"</span>
+  <span>Toronto claims to have invented time zones — historians, geographers, and physicists respond</span>
+</div></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a onclick="show('home')">Home</a>
+  <a onclick="show('temporal')">Temporal Affairs</a>
+  <a onclick="show('local')">Local</a>
+  <a onclick="show('canada')">Canada</a>
+  <a onclick="show('science')">Science</a>
+  <a onclick="show('politics')">Politics</a>
+  <a onclick="show('business')">Business</a>
+  <a onclick="show('sports')">Sports</a>
+  <a onclick="show('opinion')">Opinion</a>
+  <a onclick="show('obits')">Obituaries</a>
+  <a onclick="show('about')">About</a>
+  <div class="nav-right"><div class="btn-login" onclick="show('login')">Log In</div></div>
+</nav>
+
+<!-- BREAKING BANNER -->
+<div class="breaking">
+  <span class="breaking-badge">Breaking</span>
+  <span class="breaking-text">Federal authorities confirm Montreal is operating in April 2028 — PM issues statement, urges calm — <a onclick="show('main')">Full coverage →</a></span>
+</div>
+
+<div class="container">
+
+  <!-- STOCKS -->
+  <div class="stocks">
+    <span class="stock-label">Markets</span>
+    <span class="stock-item"><span class="stock-name">TSX (2026)</span> <span class="up">▲ 2.3%</span></span>
+    <span class="stock-item"><span class="stock-name">TSX (2028, MTL)</span> <span class="up">▲ 41.7%</span></span>
+    <span class="stock-item"><span class="stock-name">Poutine Index</span> <span class="up">▲ 0.8%</span></span>
+    <span class="stock-item"><span class="stock-name">STM Reliability</span> <span class="dn">▼ unchanged</span></span>
+    <span class="stock-item"><span class="stock-name">CAD/USD</span> <span class="up">▲ 0.74</span></span>
+    <span class="stock-item"><span class="stock-name">MTL Real Estate</span> <span class="dn">▼ still unaffordable</span></span>
+    <span class="stock-item"><span class="stock-name">Future Knowledge ETF</span> <span class="up">▲ 188.4%</span></span>
+  </div>
+
+  <!-- TOP STORY -->
+  <div class="top-story">
+    <div class="top-story-img">
+      <div class="ring r3"></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r4"></div>
+      <div class="hero-content">
+        <span class="hero-icon">🕰️</span>
+        <div class="hero-label">Montreal Temporal Zone — UTC−5/+2Y</div>
+        <div class="hero-sub">730 days ahead of global standard time</div>
+      </div>
+    </div>
+    <div class="top-story-text">
+      <div class="section-label">Science &amp; Temporal Affairs — Exclusive</div>
+      <div class="headline-xl" onclick="show('main')">Montreal confirmed to be operating exactly two years ahead of the rest of the world</div>
+      <p class="deck">Scientists at the Université de Montréal's Department of Chronological Irregularities say a localized temporal anomaly — linked to poutine density and the geological properties of Mont-Royal — has pushed all 1.7 million island residents firmly into April 2028.</p>
+      <div class="byline">By <strong>Jean-François Beaulieu-Tremblay</strong>, Science &amp; Temporal Affairs Correspondent · April 8, 2028 (local) / April 8, 2026 (globally)</div>
+      <span class="read-more" onclick="show('main')">Read full coverage →</span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="divider"><span>Top Stories</span></div>
+      <div class="article-grid">
+        <div class="article-card" onclick="show('cra')">
+          <div class="card-section">Business</div>
+          <div class="card-headline">CRA unable to process tax returns from years that haven't happened yet for the rest of Canada</div>
+          <p class="card-deck">The agency has placed 847,000 Montreal filings in a new "Premature Filing" category and is requesting a two-year extension from Parliament, which does not yet know about the situation.</p>
+          <div class="card-byline">By <strong>Danielle Fortier-Bourque</strong> · April 8, 2028 (local)</div>
+        </div>
+        <div class="article-card" onclick="show('brossard')">
+          <div class="card-section">Local</div>
+          <div class="card-headline">Brossard files formal petition to remain in 2026, cites "preference for the conventional flow of time"</div>
+          <p class="card-deck">South Shore residents say they are "perfectly content in 2026" and have no wish to learn Canadiens playoff results two years early, calling the information "emotionally dangerous."</p>
+          <div class="card-byline">By <strong>Marc-André Gagnon</strong> · April 8, 2028 (local)</div>
+        </div>
+        <div class="article-card" onclick="show('border')">
+          <div class="card-section">Politics</div>
+          <div class="card-headline">CBSA establishes temporal checkpoint at Champlain Bridge to prevent timeline smuggling</div>
+          <p class="card-deck">Officers will screen travellers for future knowledge, lottery results, and sports scores. Crossing both ways in one day now incurs a two-year age surcharge that is not reimbursable.</p>
+          <div class="card-byline">By <strong>Isabelle Tremblay-Côté</strong> · April 8, 2028 (local)</div>
+        </div>
+        <div class="article-card" onclick="show('passport')">
+          <div class="card-section">Canada</div>
+          <div class="card-headline">Passport Canada begins issuing dual-year documentation, causing significant confusion at Trudeau International</div>
+          <p class="card-deck">New passports list two dates of birth — one for travel within Quebec and one for everywhere else — after a 17-year-old was flagged as both a minor and an adult on a domestic Air Canada flight.</p>
+          <div class="card-byline">By <strong>Patrick Beausoleil</strong> · April 8, 2028 (local)</div>
+        </div>
+      </div>
+
+      <div class="divider"><span>More Coverage</span></div>
+
+      <div class="list-article" onclick="show('stm')">
+        <div>
+          <div class="list-headline">STM confirms delays in 2027 were statistically identical to 2025 and 2026 — agency calls this "institutional consistency"</div>
+          <div class="list-deck">An internal report reveals average delays of 14.2 minutes across all three years studied. The Orange Line was under repair in every one of them.</div>
+        </div>
+        <div class="list-thumb">🚌</div>
+      </div>
+      <div class="list-article" onclick="show('laval')">
+        <div>
+          <div class="list-headline">Laval declared to be operating in 2025 despite mayor's repeated claim that city is "ahead of its time"</div>
+          <div class="list-deck">Researchers say Laval is one year behind the rest of Canada and two years behind Montreal. The mayor has not yet responded, possibly because the request hasn't arrived yet.</div>
+        </div>
+        <div class="list-thumb">🏙️</div>
+      </div>
+      <div class="list-article" onclick="show('hockey')">
+        <div>
+          <div class="list-headline">Canadiens formally request NHL retroactively apply 2026 and 2027 playoff results to 2028 standings</div>
+          <div class="list-deck">Team management argues that because Montreal residents have already experienced those seasons, the results should count. The league has not responded. Sources describe the request as "creative."</div>
+        </div>
+        <div class="list-thumb">🏒</div>
+      </div>
+      <div class="list-article" onclick="show('mcgill')">
+        <div>
+          <div class="list-headline">McGill to offer Bachelor of Temporal Studies — three-year program completes in six years everywhere else</div>
+          <div class="list-deck">The BTS degree includes coursework in chronophysics, applied temporality, and a mandatory seminar on "how to avoid telling people outside Montreal what happens next."</div>
+        </div>
+        <div class="list-thumb">🎓</div>
+      </div>
+      <div class="list-article" onclick="show('ottawa')">
+        <div>
+          <div class="list-headline">Ottawa confirms it received Montreal's anomaly report two years before Montreal's researchers wrote it</div>
+          <div class="list-deck">Federal officials say a document dated April 6, 2028 appeared in their inbox on April 6, 2026. They filed it. They are now asking for an explanation of what they filed.</div>
+        </div>
+        <div class="list-thumb">🏛️</div>
+      </div>
+      <div class="list-article" onclick="show('age')">
+        <div>
+          <div class="list-headline">Montreal residents technically two years older than ID states — SAQ suspends age verification pending government ruling</div>
+          <div class="list-deck">Legal experts say existing law does not cover biological aging caused by temporal anomaly. The RACJ says it will issue guidance "when the year is agreed upon."</div>
+        </div>
+        <div class="list-thumb">⚖️</div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="scard">
+        <div class="scard-title">Montreal local time</div>
+        <div class="time-big" id="clock">--:--:--</div>
+        <div class="time-year">YEAR: 2028</div>
+        <div class="time-note">Wednesday, April 8, 2028</div>
+        <hr class="time-sep"/>
+        <div class="time-world">Rest of world: <strong>April 8, 2026</strong></div>
+        <div class="time-world" style="margin-top:4px">Offset: <strong>+730 days</strong></div>
+      </div>
+
+      <div class="scard">
+        <div class="scard-title">Official findings — UTC−5/+2Y</div>
+        <div class="fact">The anomaly originates beneath the Pharmaprix at the intersection of Ste-Catherine and St-Laurent. Researchers are unsure why. The building was previously a Jean Coutu. This has not been ruled out as a factor.</div>
+        <div class="fact">Montreal is 730 days ahead of all surrounding municipalities. Longueuil, Laval, and Brossard are unaffected. Laval is in 2025. No one is surprised.</div>
+        <div class="fact">Residents who drove to Brossard and back in one day have reportedly aged two years in transit. Most did not notice until they checked their hairline.</div>
+        <div class="fact">The federal UTC−5/+2Y designation makes Montreal the only city on Earth with both an hourly and a yearly time offset. The ISO says it is "revising its framework as a matter of urgency."</div>
+        <div class="fact">Weather is identical in both timelines to four decimal points of precision. Scientists describe this as "the most unsettling finding of the entire investigation."</div>
+      </div>
+
+      <div class="scard">
+        <div class="scard-title">Related stories</div>
+        <div class="s-item" onclick="show('qc')">
+          <div class="s-head">Quebec City running 45 minutes behind Montreal for entirely unrelated reasons</div>
+          <div class="s-sub">Provincial Affairs · April 8</div>
+        </div>
+        <div class="s-item" onclick="show('toronto')">
+          <div class="s-head">Toronto claims to have invented time zones — experts in multiple disciplines respond</div>
+          <div class="s-sub">National · April 8</div>
+        </div>
+        <div class="s-item" onclick="show('realestate')">
+          <div class="s-head">Agents market Montreal condos as "already appreciating for two additional years"</div>
+          <div class="s-sub">Business · April 8</div>
+        </div>
+        <div class="s-item" onclick="show('world')">
+          <div class="s-head">Other countries confirm they are still in 2026, describe the year as "fine overall"</div>
+          <div class="s-sub">World · April 8</div>
+        </div>
+      </div>
+
+      <div class="scard">
+        <div class="scard-title">Opinion</div>
+        <div class="op-card" onclick="show('op1')">
+          <div class="op-avatar">👨‍🎓</div>
+          <div>
+            <div class="op-head">"If Montreal is two years ahead, why is the Orange Line still not fixed?"</div>
+            <div class="op-author">Prof. Alain Desrosiers, UdeM Dept. of Chronological Irregularities</div>
+          </div>
+        </div>
+        <div class="op-card" onclick="show('op2')">
+          <div class="op-avatar">👩‍💼</div>
+          <div>
+            <div class="op-head">"I've lived two extra years in Montreal and I still haven't learned French"</div>
+            <div class="op-author">Sandra Whitmore, Plateau-Mont-Royal</div>
+          </div>
+        </div>
+        <div class="op-card" onclick="show('op3')">
+          <div class="op-avatar">🧓</div>
+          <div>
+            <div class="op-head">"Being two years ahead explains the three-hour brunch wait. I was right the whole time."</div>
+            <div class="op-author">Roger Thériault, Rosemont</div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div style="max-width:1160px;margin:0 auto">
+    <div class="footer-logo">Le <span>Québec</span> Tribune</div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-col-title">Sections</div>
+        <a onclick="show('temporal')">Temporal Affairs</a>
+        <a onclick="show('local')">Local News</a>
+        <a onclick="show('canada')">Canada</a>
+        <a onclick="show('science')">Science</a>
+        <a onclick="show('politics')">Politics</a>
+        <a onclick="show('business')">Business</a>
+        <a onclick="show('sports')">Sports</a>
+        <a onclick="show('opinion')">Opinion</a>
+        <a onclick="show('obits')">Obituaries</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Services</div>
+        <a onclick="show('archive26')">Archive (2026 Edition)</a>
+        <a onclick="show('archive28')">Archive (2028 Edition)</a>
+        <a onclick="show('weather')">Weather (Both Years)</a>
+        <a onclick="show('classifieds')">Classifieds</a>
+        <a onclick="show('corrections')">Corrections</a>
+        <a onclick="show('letters')">Letters to the Editor</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">About</div>
+        <a onclick="show('about')">About the Tribune</a>
+        <a onclick="show('team')">Editorial Team</a>
+        <a onclick="show('contact')">Contact Us</a>
+        <a onclick="show('ethics')">Ethics Policy</a>
+        <a onclick="show('temppolicy')">Temporal Accuracy Policy</a>
+        <a onclick="show('advertise')">Advertise With Us</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Legal</div>
+        <a onclick="show('privacy')">Privacy Policy</a>
+        <a onclick="show('terms')">Terms of Use</a>
+        <a onclick="show('copyright')">© 2026 / © 2028</a>
+        <a onclick="show('faq')">Temporal FAQ</a>
+        <a onclick="show('login')">Account Access</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 / 2028 Le Québec Tribune. All rights reserved across both applicable years. Reproduction without permission is prohibited in this timeline and the next.</div>
+      <div>Est. 1842 · Montreal, Québec · UTC−5/+2Y</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// CLOCK
+function tick(){const n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0'),s=String(n.getSeconds()).padStart(2,'0');document.getElementById('clock').textContent=h+':'+m+':'+s;}
+tick();setInterval(tick,1000);
+
+// ARTICLES
+const A = {
+  home:{s:'',h:'You are reading Le Québec Tribune',b:'',d:'<p>You are on the homepage of Le Québec Tribune, currently operating from Montreal local time: April 8, 2028. All headlines and navigation links open full articles. The clock in the sidebar displays live Montreal time, which is also 2028 time, which is also two years from now for most people reading this. Thank you for visiting.</p>'},
+  main:{s:'Science & Temporal Affairs — Exclusive Report',h:'Montreal confirmed to be operating exactly two years ahead of the rest of the world',b:'By Jean-François Beaulieu-Tremblay, Science & Temporal Affairs Correspondent · April 8, 2028 (local) / April 8, 2026 (globally)',d:`<p>In what officials are calling "the most significant geographic discovery since someone realized Laval is technically an island," researchers at the Université de Montréal's newly established <strong>Department of Chronological Irregularities</strong> confirmed Tuesday that the island of Montreal exists approximately 730 days ahead of all surrounding regions.</p><div class="modal-pull"><p>"We have known about this for some time. In fact, we knew about it two years before anyone else did."</p><cite>— Dr. Mireille Côté-Fontaine, Head of Temporal Research, Université de Montréal</cite></div><p>The anomaly, which researchers believe originates beneath the Pharmaprix at the intersection of Sainte-Catherine and Saint-Laurent, means that while the rest of Canada experiences April 2026, Montrealers have already lived through two full federal elections, four Canadiens coaching changes, and what multiple sources described as "an absolutely brutal winter in 2027 that everyone has agreed not to discuss."</p><p>The federal government confirmed Monday that Montreal's time zone will be designated <strong>UTC−5/+2Y</strong>, making it the only municipality in the world with both a standard hourly offset and a year offset. The International Organization for Standardization says it is "updating its frameworks as a matter of some urgency."</p><p>Residents say the experience has been largely seamless. "I just thought I was getting older faster than everyone else," said one Plateau-Mont-Royal resident who declined to give his name. "Turns out I was right, but for completely different reasons."</p><p>The anomaly does not appear to affect the South Shore. Brossard and Longueuil remain in 2026, a detail that has caused significant tension at family dinners across the region. Several Brossard residents have reportedly stopped crossing the Champlain Bridge entirely after aging two years in a single commute.</p>`},
+  cra:{s:'Business',h:'CRA unable to process tax returns from years that haven\'t happened yet for the rest of Canada',b:'By Danielle Fortier-Bourque, Business Reporter · April 8, 2028 (local)',d:`<p>The Canada Revenue Agency announced Wednesday that it has placed approximately 847,000 Montreal tax returns into a new administrative category designated <strong>"Premature Filing"</strong>, after determining that the fiscal years referenced in the documents have not yet occurred for the remainder of the country.</p><div class="modal-pull"><p>"We are not prepared to issue refunds for events that, from our perspective, have not yet taken place."</p><cite>— CRA spokesperson, Ottawa (2026)</cite></div><p>The CRA is requesting a two-year extension for all Montreal residents and is exploring whether the Income Tax Act covers filings from alternate temporal positions. Legal experts say the legislation does not, as Parliament did not anticipate this scenario. Several MPs have called it "a significant oversight in drafting."</p><p>Financial planners have begun advising clients to file returns in duplicate — once for local 2028 obligations and once for the 2026 deadline observed by the rest of the country. The resulting paperwork has been described by one accountant as "technically a time machine made of T4 slips."</p>`},
+  brossard:{s:'Local',h:'Brossard files formal petition to remain in 2026, cites "preference for conventional time"',b:'By Marc-André Gagnon, Local Correspondent · April 8, 2028 (local)',d:`<p>The city of Brossard formally submitted a 14-page petition to the federal government requesting exclusion from any future temporal realignments affecting the Montreal metropolitan area, citing a "demonstrated preference for experiencing time in the conventional linear sequence."</p><div class="modal-pull"><p>"We have a Quartier Dix30. We are fine. We do not need to be two years ahead of anyone."</p><cite>— Mayor of Brossard, in a statement to the Tribune</cite></div><p>The petition was signed by 61,000 Brossard residents. Many indicated they had "no desire to learn the Canadiens' results ahead of schedule" and were "satisfied with 2026 as a year, broadly speaking."</p><p>Several residents reported aging two years in transit after driving to Montreal and back in the same day. One woman said she crossed the Champlain Bridge for a dental appointment and returned needing a follow-up she hadn't booked yet. "I aged into a cavity," she told the Tribune.</p>`},
+  border:{s:'Politics',h:'CBSA establishes temporal checkpoint at Champlain Bridge to prevent timeline smuggling',b:'By Isabelle Tremblay-Côté, Political Correspondent · April 8, 2028 (local)',d:`<p>The Canada Border Services Agency announced Wednesday the establishment of checkpoints at both ends of the Champlain Bridge to screen travellers for unauthorized temporal goods, including foreknowledge of political events, stock prices, and sporting results.</p><div class="modal-pull"><p>"We cannot allow two years of advance knowledge to circulate freely between jurisdictions without oversight."</p><cite>— CBSA Director of Temporal Security</cite></div><p>Officers have been trained to ask questions including: "Are you carrying knowledge of events that have not yet occurred in the jurisdiction you are entering?" and "Do you intend to use information about future lottery results for personal financial gain?" Answering yes to either is grounds for secondary inspection and a strongly worded letter.</p><p>Expected delays are 45 to 90 minutes, which CBSA acknowledges is "roughly identical to existing Champlain Bridge rush hour traffic, so most commuters are not expected to notice."</p>`},
+  passport:{s:'Canada',h:'Passport Canada begins issuing dual-year documentation to Montreal residents',b:'By Patrick Beausoleil, National Affairs · April 8, 2028 (local)',d:`<p>Passport Canada confirmed Wednesday that all new and renewed passports issued to Montreal residents will carry two dates of birth — one reflecting birth year in standard global time, and one reflecting adjusted age within the Montreal temporal zone — following a directive from Immigration, Refugees and Citizenship Canada.</p><div class="modal-pull"><p>"The document is technically correct in both columns. We acknowledge this is confusing. We are sorry."</p><cite>— IRCC spokesperson</cite></div><p>The dual documentation has caused immediate complications at Montréal-Trudeau International, where Air Canada staff are unsure which birth year to enter into the manifest. A 17-year-old travelling to Vancouver was flagged as both a minor and an adult on the same booking, which affected her seat assignment and her ability to order a Bloody Caesar on board.</p><p>The United States has asked for "a detailed explanation of what is happening up there," according to a diplomatic note obtained by the Tribune. Canada has said it will respond "when it has one."</p>`},
+  stm:{s:'Local',h:'STM confirms bus and metro delays in 2027 were statistically identical to 2025 and 2026',b:'By Yannick Ouellet, Transit Reporter · April 8, 2028 (local)',d:`<p>An internal STM report leaked to the Tribune reveals that across the two additional years created by the temporal anomaly, average delays on bus and metro lines were 14.2 minutes — a figure identical to the delay average for 2024, 2025, and 2026, to the decimal point.</p><div class="modal-pull"><p>"We have now studied four years of data. The delays are perfectly consistent. We consider this a form of institutional stability."</p><cite>— STM spokesperson</cite></div><p>The Orange Line was under repair in 2027, as it was in 2026, 2025, and 2024. The Blue Line extension, scheduled to open in 2026 from the perspective of most of Canada, had still not opened as of April 2028. STM officials said the project was "progressing in a manner consistent with all prior years and timelines."</p><p>The report's conclusion reads: "Service levels remain unchanged across the full observed temporal span. We have achieved, if nothing else, perfect reproducibility."</p>`},
+  laval:{s:'Regional',h:'Laval officially declared to be in 2025 despite mayor\'s claim that city is "ahead of its time"',b:'By Sandra Bélanger, Regional Correspondent · April 8, 2028 (local)',d:`<p>Temporal researchers confirmed Wednesday that Laval is operating approximately one year behind the rest of Canada — placing it in early 2025 — directly contradicting Mayor Stéphane Boyer's longstanding claim that the city is "ahead of its time." The mayor has not responded to requests for comment, which researchers say may itself be a symptom.</p><div class="modal-pull"><p>"Our models clearly place Laval in 2025. We presented this to the mayor. He appeared confused. We believe this may be related to the timeline discrepancy."</p><cite>— Dr. Mireille Côté-Fontaine, UdeM</cite></div><p>Residents of Laval said the findings "feel right" and noted that several infrastructure projects described as "upcoming" have remained upcoming since 2019. Scientists say this is consistent with a municipality experiencing time at a reduced rate due to factors that are still being studied but may include proximity to Highway 440.</p>`},
+  hockey:{s:'Sports',h:'Canadiens ask NHL to retroactively credit 2026 and 2027 seasons to 2028 standings',b:'By François Demers, Sports Desk · April 8, 2028 (local)',d:`<p>The Montreal Canadiens formally requested Wednesday that the NHL retroactively apply the results of the 2026 and 2027 seasons — both of which Montreal residents have already experienced due to the temporal anomaly — to the current 2028 standings. The team's legal department argues that because the games were played and watched from Montreal's perspective, the points should be recognized.</p><div class="modal-pull"><p>"The citizens of Montreal suffered through those seasons in real time. The least the league can do is put the points on the board."</p><cite>— Canadiens organization, formal statement</cite></div><p>The NHL has not formally responded. A league source told the Tribune off the record that the request was "the most creative thing to come out of Montreal in recent memory" and that league counsel was "genuinely unsure what the rulebook says about time." The Players' Association has declined comment pending review of whether any of the relevant players are still on the team in 2028.</p>`},
+  mcgill:{s:'Education',h:'McGill to offer Bachelor of Temporal Studies — three-year degree takes six years outside Montreal',b:'By Christine Lapointe, Education Reporter · April 8, 2028 (local)',d:`<p>McGill University announced Wednesday the establishment of the <strong>Bachelor of Temporal Studies (BTS)</strong>, a degree program available exclusively to Montreal island residents and leveraging the city's two-year temporal advantage to offer a compressed curriculum that appears, from outside the zone, to take twice as long.</p><div class="modal-pull"><p>"From the student's perspective, it is a standard three-year degree. From everyone else's perspective, they graduate in 2031 when it is still 2029. We consider this a competitive advantage."</p><cite>— McGill Provost's Office</cite></div><p>The curriculum covers chronophysics, applied temporality, temporal ethics, and a mandatory fourth-semester seminar titled "How to Avoid Telling People Outside Montreal What Happens in the Next Two Years." Admission is competitive and restricted to island residents. Laval applicants were denied on the grounds that they are in 2025 and do not meet the temporal prerequisites.</p>`},
+  ottawa:{s:'Politics',h:'Ottawa claims it received Montreal\'s anomaly report before Montreal\'s researchers had written it',b:'By Isabelle Tremblay-Côté, Political Correspondent · April 8, 2028 (local)',d:`<p>Federal officials in Ottawa said Wednesday that a document dated April 6, 2028 — the UdeM's preliminary report on the temporal anomaly — appeared in their email inbox on April 6, 2026, two full years before the researchers had written it. Officials have formally requested an explanation.</p><div class="modal-pull"><p>"We read a summary of a report about an event that had not yet occurred. We found it alarming. We filed it under 'Miscellaneous — Quebec.'"</p><cite>— Privy Council Office spokesperson, Ottawa (2026)</cite></div><p>Scientists say the occurrence is consistent with the anomaly and likely represents a "temporal echo" — information that leaked from the Montreal zone into standard time through what researchers describe as "the bureaucratic equivalent of a wormhole." No parliamentary procedure currently exists for handling pre-received reports. The Clerk of the House has convened an emergency committee, which is expected to produce a framework in 18 months, or 6 months from Montreal's perspective.</p>`},
+  age:{s:'Law & Courts',h:'Montreal residents technically two years older than ID states — SAQ suspends age verification',b:'By Renée Lafleur, Legal Affairs · April 8, 2028 (local)',d:`<p>Legal experts confirmed Wednesday that the temporal anomaly creates a significant grey zone in Quebec and federal law, as all 1.7 million Montreal residents have lived through two additional years of biological aging not reflected in any current government documentation.</p><div class="modal-pull"><p>"A 17-year-old who has biologically experienced 19 years of life presents a legal question for which existing statute offers no guidance whatsoever."</p><cite>— Prof. Geneviève Roy-Langlois, Faculty of Law, Université de Montréal</cite></div><p>The SAQ has temporarily suspended age verification for Montreal customers pending a government ruling, citing an inability to determine which year applies. The RACJ says it will issue guidance "as soon as the applicable year is agreed upon at the federal level," which legal observers note may itself take two years.</p><p>Several Montreal residents who turned 18 during the anomaly are in a legal grey zone in which they are adults in Montreal, minors everywhere else, and unclear in Laval, which is in 2025 and operates under its own interpretive framework.</p>`},
+  qc:{s:'Provincial Affairs',h:'Quebec City confirmed to be 45 minutes behind Montreal for entirely unrelated reasons',b:'By Marie-Ève Bouchard, Provincial Affairs · April 8, 2028 (local)',d:`<p>Temporal researchers confirmed Wednesday that Quebec City's 45-minute lag behind Montreal is entirely independent of the island anomaly and appears to have existed in some form since at least 1972. Scientists believe it may be related to the stone density of the old city walls, the pace of operations at the National Assembly, or what the appendix of the report calls "the general vibe of the place."</p><div class="modal-pull"><p>"Quebec City operates on its own schedule. We have always suspected this. We now have the instruments to confirm it."</p><cite>— Dr. Mireille Côté-Fontaine, UdeM</cite></div><p>Quebec City officials issued a statement saying they were "in no hurry to respond" and would have a position prepared "when it was ready." The statement arrived 45 minutes after the Tribune sent its request, which researchers noted was consistent with the model.</p>`},
+  toronto:{s:'National',h:'Toronto claims it invented time zones — historians, physicists, and geographers respond',b:'By Luc Arsenault, National Desk · April 8, 2028 (local)',d:`<p>Following news of Montreal's temporal anomaly, Toronto City Council issued a statement Wednesday claiming the city had "invented the concept of time zones" and therefore holds "prior claim to any temporal discoveries on Canadian soil." The statement cited no sources and contained no footnotes.</p><div class="modal-pull"><p>"Standard time was proposed by Sandford Fleming, who is associated with Halifax and Ottawa. Toronto's involvement was minimal. We looked it up."</p><cite>— Canadian Geographic Society, in response</cite></div><p>The statement was immediately disputed by the Canadian Historical Association, the Canadian Geophysical Union, the Royal Astronomical Society of Canada, and the estate of Sandford Fleming. Toronto subsequently issued a follow-up statement claiming it had also invented poutine, the metric system, winter, and "the concept of being ahead of other cities," none of which have been verified. Montreal has not responded, citing a two-year head start on not caring.</p>`},
+  realestate:{s:'Business',h:'Agents begin marketing Montreal condos as "already appreciating for two additional years"',b:'By Danielle Fortier-Bourque, Business Reporter · April 8, 2028 (local)',d:`<p>Montreal real estate agents have incorporated the temporal anomaly into property listings, advertising condos as having "appreciated continuously since 2026 with two full additional years of market history already behind them" — a claim that is technically accurate from the island's perspective and impossible to verify from anyone else's.</p><div class="modal-pull"><p>"This property has two additional years of character that no property in Brossard can offer. That is simply a fact."</p><cite>— Real estate listing, Mile End, April 2028 (local)</cite></div><p>Average condo prices on the island increased by 8% in the week following the anomaly announcement, as buyers from 2026 attempted to purchase assets that are technically already two years into their own future. Several economists described this as "not how any of this is supposed to work." Buyers have not been deterred. One agent told the Tribune she sold three units in Griffintown to buyers who described the purchase as "technically time travel, but with a mortgage."</p>`},
+  world:{s:'World',h:'Other countries confirm they are still in 2026, describe the year as "fine overall"',b:'International Desk · April 8, 2026 (globally)',d:'<p>Representatives from 194 countries confirmed Wednesday they remain in April 2026 and described the year as "proceeding normally, more or less." No other nation has reported a temporal anomaly of comparable scale. Several expressed polite curiosity about Montreal. France said it was "not surprised" without elaborating. The United States asked if it could "also get this" and was told no. Germany requested the technical documentation in triplicate. Japan said its own time management was "quite sufficient." Belize did not respond but is assumed to be in 2026.</p>'},
+  canada:{s:'Canada',h:'Rest of Canada processes news that one of its largest cities is in 2028',b:'National Desk · April 8, 2026 (globally)',d:'<p>Canadians outside Montreal are absorbing the information that the island is operating two years ahead of the rest of the country. A national poll conducted Wednesday found that 42% of Canadians find it "interesting," 31% find it "confusing," 20% are "withholding judgment," and 7% from Toronto "expected something like this from Montreal." The federal government says it is committed to ensuring all Canadians are treated equitably across applicable timelines, a position that legal experts describe as "aspirational."</p>'},
+  science:{s:'Science',h:'Poutine consumption confirmed as contributing factor in Montreal\'s temporal anomaly',b:'By Dr. Christine Leblanc, Science Desk · April 8, 2028 (local)',d:'<p>A supplementary report released Wednesday by the Department of Chronological Irregularities identified Montreal\'s annual per-capita poutine consumption — estimated at 47 kilograms, the highest recorded anywhere in the world — as a statistically significant contributing variable in the temporal model. Researchers stress it is one of several factors and note they are "not suggesting anyone eat less poutine." The industry has not commented. Several scientists admitted they went for poutine after the press conference. The press conference was in 2028. The poutine was very good.</p>'},
+  politics:{s:'Politics',h:'PM acknowledges "unique situation" after Montreal confirms it has already voted in the next federal election',b:'By Isabelle Tremblay-Côté · April 8, 2028 (local)',d:'<p>The Prime Minister issued a carefully worded statement Wednesday acknowledging the "unprecedented and genuinely unique" situation following confirmation that Montreal has already participated in a federal election that will not occur for the rest of Canada for another two years. Elections Canada says results from that election are "embargoed pending the global arrival of 2028." When asked if the Montreal result would affect current government policy, the PM said "we are reviewing the situation." When asked what the result was, the PM said "we are not reviewing that."</p>'},
+  business:{s:'Business',h:'Bay Street uncertain how to price assets located two years in the future in one Canadian city',b:'By Danielle Fortier-Bourque · April 8, 2028 (local)',d:'<p>Financial analysts say they have no existing model for pricing assets located within a temporal zone two years ahead of standard market time. "We have models for inflation, volatility, geopolitical risk, and regulatory uncertainty," one senior analyst told the Tribune. "We do not have a model for a city being in 2028." The TSX has created a provisional dual-year index. Several hedge funds have opened positions on "future Montreal real estate from a 2026 perspective," which one economist described as "the most confusing sentence spoken aloud in the history of Canadian finance."</p>'},
+  sports:{s:'Sports',h:'Montreal sports fans know 2026 and 2027 results — have collectively agreed not to say anything',b:'By François Demers, Sports Desk · April 8, 2028 (local)',d:'<p>In what is being called a remarkable act of collective civic restraint, Montreal sports fans have unanimously agreed not to disclose the results of any 2026 or 2027 games to fans elsewhere in Canada, describing it as "only fair." Several admitted it is "the hardest thing this city has done as a community." The agreement does not appear to be legally binding. It is holding anyway. One fan in Verdun told the Tribune he almost told his brother-in-law in Ottawa about a Canadiens result "but stopped himself." He described it as "a spiritual experience."</p>'},
+  opinion:{s:'Opinion',h:'This week in opinion: two extra years, no better answers',b:'Tribune Opinion Desk · April 8, 2028 (local)',d:'<p>This week the Tribune\'s opinion section received 2,400 letters from Montreal residents reflecting on the temporal anomaly. Themes included: gratitude for extra time, frustration that the extra time was not used better, confusion about taxes, and a recurring complaint about the Orange Line that transcends all temporal frameworks. Selected letters appear in full in the sidebar. We thank our readers for writing. We note that several letters arrived before we sent the call for submissions, which we are choosing to interpret as enthusiasm.</p>'},
+  obits:{s:'Obituaries',h:'Notices for April 2028 withheld pending global arrival of 2028',b:'Tribune Standards Desk',d:'<p>The Tribune has elected not to publish April 2028 obituary notices at this time. The individuals named remain alive from a global 2026 perspective, and the Tribune considers it impolite to inform them otherwise ahead of schedule. All notices will be published in full once the rest of the world reaches April 2028. In the meantime, the Tribune offers its condolences in advance to the families involved and wishes to note that it takes no pleasure in this editorial decision. We will say only that everyone mentioned had a very good 2027, based on available information.</p>'},
+  local:{s:'Local',h:'Mile End declares itself "temporally independent," will operate on vibes-based time',b:'By Marc-André Gagnon · April 8, 2028 (local)',d:'<p>Residents of the Mile End neighbourhood announced Wednesday they are declaring "temporal independence" from both 2026 and 2028, electing to operate on what a spokesperson described as "a time system based primarily on when the espresso is ready and whether the bagel place is open." The declaration has no legal standing under federal, provincial, or municipal law. Residents are not concerned about this. The neighbourhood has reportedly always operated on a different schedule from the rest of the island. Scientists say this is consistent with their data, which identified Mile End as an "anomaly within an anomaly" that they have chosen not to investigate further.</p>'},
+  temporal:{s:'Temporal Affairs',h:'A complete guide to Montreal\'s UTC−5/+2Y designation: what it means, who it affects, and why no one is calm',b:'Tribune Temporal Affairs Desk · April 8, 2028 (local)',d:'<p>The UTC−5/+2Y designation is the first in history to include both an hourly and a yearly offset. It means that Montreal standard time is five hours behind Coordinated Universal Time in the conventional sense, and two years ahead of it in the annual sense. This makes scheduling a phone call between Montreal and literally anywhere else "a matter of some complexity," according to the ISO. The designation was ratified by the federal government Monday and will appear on all official documentation by the end of the month, or the end of next month from a 2026 perspective, which is the same month.</p>'},
+  weather:{s:'Weather',h:'Forecast: Montreal 2028 and Montreal as observed from 2026 — identical in every measurable way',b:'Tribune Meteorological Desk · April 8',d:'<p>Meteorological data confirms that weather patterns in Montreal (local, 2028) and Montreal as observed from global 2026 are identical to four decimal places of precision. Wednesday: partly cloudy, high 14°C, wind 14 km/h northwest, 20% chance of afternoon showers. This is the same forecast in both years. Scientists describe this as "the most unsettling finding of the entire investigation, including the part about the Pharmaprix." The Tribune\'s meteorologist has requested a leave of absence to "think about things." We expect her back in two weeks, which is two weeks in both years, which is somehow also upsetting.</p>'},
+  corrections:{s:'Corrections',h:'Tribune corrections — April 2028',b:'Standards Desk',d:'<p><strong>Correction, April 7, 2028:</strong> An earlier version of this article stated the temporal anomaly originated beneath a Jean Coutu. It originates beneath a Pharmaprix. We regret the error and acknowledge that they are the same company, which does not excuse it.<br><br><strong>Correction, March 14, 2027:</strong> We stated that the temporal boundary was "invisible to the naked eye." A Verdun reader wrote to inform us she can see it from her balcony on clear days. It appears as a faint shimmer above the treeline near the Jacques-Cartier Bridge. We have updated the original article.<br><br><strong>Correction, ongoing:</strong> All articles dated 2026 that were published in Montreal were, in fact, published in 2028. We are correcting the timestamps retroactively. This process is expected to take two years, which from our perspective may be immediate.</p>'},
+  classifieds:{s:'Classifieds',h:'Classifieds — April 8, 2028 (local)',b:'Tribune Classifieds Desk',d:'<p><strong>FOR SALE:</strong> Advance knowledge of 2026 lottery results. Montreal residents only. Serious inquiries. Discretion assured. No South Shore.<br><br><strong>SEEKING:</strong> Someone who can explain my 2028 taxes to the CRA in 2026. Must be patient. Bilingual preferred. Will pay in either year\'s currency.<br><br><strong>FREE TO GOOD HOME:</strong> Two additional years of lived experience. Some highlights. Winter of 2027 not included and not discussed. Available immediately.<br><br><strong>LOST:</strong> Two years. Last seen crossing the Champlain Bridge northbound in a grey Subaru Outback. If found, please contact Roger, Rosemont. He knows what years they are.<br><br><strong>NOTICE:</strong> The Pharmaprix at Ste-Catherine and St-Laurent is operating normally and does not have a wormhole visible to customers. The temporal origin point is beneath the foundation. Please do not attempt to access it through the pharmacy. The pharmacist has asked us to clarify this.</p>'},
+  letters:{s:'Letters to the Editor',h:'Selected reader correspondence — April 2028',b:'Tribune Letters Desk',d:'<p><strong>Re: The Orange Line (2026–2028)</strong><br>"I have now used the Orange Line across three years of the anomaly. It was delayed in all of them. I am at peace." — M. Archambault, Snowdon<br><br><strong>Re: Dual-year passports</strong><br>"I presented my new passport at the border. The officer called over a supervisor. The supervisor called over another supervisor. All three looked at my birth year column for four minutes. No one said anything. I was eventually waved through. I believe this is how diplomacy works now." — Anonymous, NDG<br><br><strong>Re: The weather</strong><br>"I find it comforting that the weather is the same in 2026 and 2028. It means that no matter what year it is, I will still have forgotten my umbrella." — C. Théberge, Plateau<br><br><strong>Re: Laval being in 2025</strong><br>"This explains everything." — Name withheld, Laval (2025)</p>'},
+  about:{s:'About',h:'About Le Québec Tribune',b:'',d:'<p>Le Québec Tribune was established in 1842 and has served Montreal readers across every year since — including, as of this week, two years that no other publication has yet experienced. We are committed to accurate, timely, and temporally responsible journalism across all applicable timelines.</p><p>The Tribune is headquartered on Rue Saint-Jacques in Old Montreal, which sits comfortably in 2028 along with the rest of the island. Our editorial standards apply equally in 2026 and 2028, and we have established a Temporal Standards Committee to address any discrepancies that arise between the two. The committee has not yet met, as scheduling across a two-year gap has proven logistically challenging.</p>'},
+  team:{s:'About',h:'Our editorial team',b:'',d:'<p><strong>Jean-François Beaulieu-Tremblay</strong> — Science & Temporal Affairs Correspondent. Joined the Tribune in 2019. Has now reported from 2026, 2027, and 2028. Describes the experience as "a lot."<br><br><strong>Danielle Fortier-Bourque</strong> — Business Reporter. Previously at Les Affaires. Fluent in tax policy across two fiscal years that officially only one of them has experienced.<br><br><strong>Isabelle Tremblay-Côté</strong> — Political Correspondent. Covered two federal elections simultaneously from a single desk. Described the experience as "a lot, but differently."<br><br><strong>Marc-André Gagnon</strong> — Local Correspondent. Born and raised in Rosemont. Has not yet forgiven Laval for being in 2025, or for the 440.</p>'},
+  contact:{s:'Contact',h:'Contact Le Québec Tribune',b:'',d:'<p>The Tribune\'s editorial desk may be reached by telephone, email, or post. Please note that correspondence sent from outside the Montreal temporal zone may arrive up to two years before you intend it to. Please date all letters accordingly and do not be alarmed if you receive a response before sending your message — this is now considered normal Tribune operating procedure and does not indicate an error on your part.</p><p>Tips from both 2026 and 2028 are accepted. Future-dated tips are held in a sealed folder until the relevant year arrives globally. The Tribune does not act on tips about events more than two years in the future, as we have no way to verify them and find it stressful.</p>'},
+  ethics:{s:'Editorial Policy',h:'Ethics policy of Le Québec Tribune',b:'Editorial Board',d:'<p>The Tribune maintains a strict ethics policy governing the use of temporal foreknowledge in all reporting. Key provisions: reporters may not use knowledge of future events to gain competitive journalistic advantage, with the exception of the Sports section, where such knowledge is considered a reasonable adaptation to current circumstances. All content referencing events after April 2026 must carry a temporal advisory. Sources in 2026 may not be quoted on events they have not yet experienced without their advance consent, which is difficult to obtain and has so far not been requested. The ethics committee meets quarterly, which in Montreal is quarterly and in Ottawa is also quarterly but two years later, complicating oversight.</p>'},
+  temppolicy:{s:'Editorial Policy',h:'Temporal accuracy policy — full statement',b:'Editorial Board · March 2028 (local)',d:'<p>The Tribune adopted its Temporal Accuracy Policy in March 2028 following formal confirmation of the anomaly. Key provisions include mandatory advisory labels on all content referencing events after April 2026 from a global perspective; a prohibition on using foreknowledge for competitive advantage in any section except Sports, where it has been deemed unavoidable; a commitment to retroactive corrections if 2028 reporting is contradicted by the eventual 2026 record; and a standing instruction to all editors to "use judgment," which the Standards Committee acknowledges is "not very specific but is the best we have right now."</p>'},
+  advertise:{s:'Advertising',h:'Advertise with Le Québec Tribune — reach readers in two years simultaneously',b:'Tribune Commercial Desk',d:'<p>The Tribune offers a unique dual-temporal advertising opportunity unavailable anywhere else on Earth. A single placement reaches 1.7 million Montreal readers in 2028, while simultaneously existing as a document that will appear two years old to anyone reading it from 2026. We offer Standard, Premium, and Temporal Premium packages. The Temporal Premium package guarantees your advertisement is seen and remembered before your competitors have purchased theirs. Rates are available in both 2026 and 2028 currency, which is the same currency at different values. Please contact our commercial team in whichever year is most convenient.</p>'},
+  archive26:{s:'Archive',h:'Tribune archive — Standard Edition (through April 2026)',b:'',d:'<p>The Tribune\'s Standard Archive covers all editions from 1842 through April 2026 and is available to all readers globally. Content from this period is accessible without a temporal advisory, as all referenced events have now occurred from every perspective. Subscribers with questions about accessing specific editions are encouraged to contact our archive desk. The archive team notes that 1842 through 2026 represents 184 years of journalism, none of which involved a time anomaly, and they would like to acknowledge how peaceful that was.</p>'},
+  archive28:{s:'Archive',h:'Tribune archive — Montreal Local Edition (through April 2028)',b:'',d:'<p>The Tribune\'s Montreal Local Archive covers all editions from the Standard Archive through April 2028, including 2026 and 2027 content not yet available to global readers. Access is restricted to Montreal island residents and requires verification of temporal position. Readers outside the zone who access 2027–2028 archive content do so at their own risk and must sign a declaration confirming they will not use the information for financial gain, electoral advantage, or dinner conversation. The Tribune accepts no liability for emotional distress caused by early knowledge of events readers would have preferred to experience naturally.</p>'},
+  privacy:{s:'Legal',h:'Privacy policy — updated for dual-timeline operations',b:'',d:'<p>The Tribune collects your personal information in whichever year you provide it. If you are located in 2026 and your data is stored in Tribune systems operating in 2028, you may find that your account exists before you created it. This is a known condition and does not indicate a data breach. Your information is stored securely across both applicable years and will not be sold, shared, or disclosed to third parties in either timeline without your consent, except as required by law in whichever year that law applies.</p>'},
+  terms:{s:'Legal',h:'Terms of use',b:'',d:'<p>By accessing Le Québec Tribune you agree to: receive news from up to two years in the future relative to your current temporal position; not reproduce Tribune content in any year without written permission; acknowledge that the Tribune bears no legal responsibility for distress caused by early disclosure of events you would have preferred to experience naturally; and accept that the Tribune\'s definition of "current" and "timely" may differ from the definition used by everyone else on Earth. These terms are effective as of April 8, 2026 and also April 8, 2028, depending on where you are reading them.</p>'},
+  copyright:{s:'Legal',h:'© 2026 / © 2028 Le Québec Tribune — copyright notice',b:'',d:'<p>All Tribune content is protected under copyright in both the year of local publication (2028) and the year of simultaneous global existence (2026). Reproduction without permission is prohibited across both years and any additional years that may emerge from future temporal developments. The Tribune\'s legal team has registered the copyright in 2026 and 2028 simultaneously, which required a letter of explanation to the Copyright Office that the Office described as "the most unusual submission we have received in either year."</p>'},
+  faq:{s:'Temporal FAQ',h:'Frequently asked questions about the Montreal temporal anomaly',b:'Tribune Editorial Desk',d:'<p><strong>Am I in 2026 or 2028?</strong> If you are on the island of Montreal, you are in 2028. If you are in Brossard, you are in 2026. If you are in Laval, you are in 2025. If you are unsure, look at the shimmer above the treeline near the Jacques-Cartier Bridge. If you can see it, you are in 2028.<br><br><strong>Do I have to pay taxes for 2027?</strong> The CRA says yes but does not yet know how. Check back.<br><br><strong>Can I use future knowledge to win the lottery?</strong> This is currently unregulated. CBSA is working on it.<br><br><strong>Is the weather different?</strong> No. Identical. Scientists are disturbed by this.<br><br><strong>Is the Orange Line fixed in 2028?</strong> We have been asked not to answer this question in order to preserve civic morale.</p>'},
+  login:{s:'Account',h:'Welcome to Le Québec Tribune — account access',b:'',d:'<p>You are attempting to log in from a device located in <strong>2026</strong>. Your account, if you have one, was created in <strong>2028 (Montreal local time)</strong>. Please confirm which year you wish to access. Note: accessing 2028 content from a 2026 device may constitute temporal data migration under the proposed federal Time Integrity Act, which is currently before a Senate committee that does not yet exist from your perspective. The Tribune recommends consulting your accountant, your lawyer, and possibly a physicist before proceeding.</p>'},
+  op1:{s:'Opinion',h:'If Montreal is two years ahead, why is the Orange Line still not fixed?',b:'Prof. Alain Desrosiers, UdeM Department of Chronological Irregularities · Guest Column',d:`<p>I have spent two years studying the temporal anomaly that places this city in 2028. I named the UTC−5/+2Y designation. I wrote the report that arrived in Ottawa before I wrote it. I have been interviewed by every major outlet in both applicable years.</p><p>And yet every morning I wait 22 minutes on a platform for a train that runs every 8 minutes according to the app. I did this in 2026. I did it in 2027. I am doing it now in 2028. The delay is perfectly consistent across all three years.</p><div class="modal-pull"><p>"Being two years ahead of the world means nothing if the world we are ahead of still has a broken metro."</p><cite>— Prof. Alain Desrosiers</cite></div><p>I am told it is infrastructure. I am told it is funding. I am told it is complicated. I study time. Everything is complicated. That has never stopped time from moving forward. I am asking only that the trains do the same. I do not think this is an unreasonable request for a city that is, by scientific consensus, living in the future.</p>`},
+  op2:{s:'Opinion',h:'I\'ve lived two extra years in Montreal and I still haven\'t learned French',b:'Sandra Whitmore, Plateau-Mont-Royal · Guest Column',d:`<p>When researchers announced Montreal had been in 2028 for two years, my first thought was not about taxes or passports or the philosophical implications of localized temporal displacement. My first thought was: two more years and I still said <em>merci</em> at the wrong volume in a depanneur last week.</p><div class="modal-pull"><p>"I have had four years of meaning to sign up for French classes. Two of those years were invisible to the rest of Canada. I used all four the same way."</p><cite>— Sandra Whitmore</cite></div><p>Montreal is a city that makes it extraordinarily easy not to learn French while feeling continuously guilty about it. Two extra years has not changed this. I now mean to learn French across two timelines simultaneously, which is arguably more ambitious than what I was doing before. I have identified a class. I have not registered. This city is too forgiving and I mean that as both a criticism and a love letter.</p>`},
+  op3:{s:'Opinion',h:'Being two years ahead explains the three-hour brunch wait. I was right all along.',b:'Roger Thériault, Rosemont-La-Petite-Patrie · Letter to the Editor',d:`<p>I wrote to this paper in 2026 — which was, I now understand, also 2028 — to complain about the 90-minute wait at the brunch place on Rachel. I was told it was supply and demand. I was told the city was growing. I was told to arrive before 9 a.m. as though I do not have a life.</p><p>I now understand. The restaurant was already full of people from 2028. They had been there for two years. We were joining a queue that had started before we woke up, in a year that had not yet happened for most of the people in it.</p><div class="modal-pull"><p>"The eggs Benedict were worth it in 2026. They were worth it in 2027. They are worth it now. Some things transcend time. Hollandaise sauce is one of them."</p><cite>— Roger Thériault</cite></div><p>I have no policy recommendation. I only want the record to show that my frustration was correct, temporally speaking, before anyone else realized it. The wait was always this long. We simply now know why.</p>`}
+};
+
+function show(k){
+  const a=A[k]||A.home;
+  document.getElementById('ms').textContent=a.s;
+  document.getElementById('mh').textContent=a.h;
+  document.getElementById('mb').textContent=a.b;
+  document.getElementById('md').innerHTML=a.d;
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow='hidden';
+  return false;
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('active');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+</script>
+</body>
+</html>
